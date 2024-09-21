@@ -25,7 +25,7 @@ public abstract class TaskMapperDelegate implements TaskMapper {
         task.setAssigneeId(request.getAssigneeId());
         task.setDescription(request.getDescription());
         task.setAuthor(service.findById(request.getAuthorId()).block());
-        task.setAssignee(service.findById(request.getAuthorId()).block());
+        task.setAssignee(service.findById(request.getAssigneeId()).block());
         task.setName(request.getName());
         task.setStatus(TaskStatus.TODO);
         return task;
