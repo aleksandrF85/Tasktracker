@@ -3,7 +3,6 @@ package com.example.Tasktracker.mapper;
 import com.example.Tasktracker.dto.request.UpsertTaskRequest;
 import com.example.Tasktracker.dto.response.TaskResponse;
 import com.example.Tasktracker.model.Task;
-import com.example.Tasktracker.model.TaskStatus;
 import com.example.Tasktracker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,7 +26,8 @@ public abstract class TaskMapperDelegate implements TaskMapper {
         task.setAuthor(service.findById(request.getAuthorId()).block());
         task.setAssignee(service.findById(request.getAssigneeId()).block());
         task.setName(request.getName());
-        task.setStatus(TaskStatus.TODO);
+        task.setStatus(request.getStatus());
+
         return task;
     }
 
