@@ -5,6 +5,7 @@ import com.example.Tasktracker.dto.response.TaskResponse;
 import com.example.Tasktracker.model.Task;
 import com.example.Tasktracker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import reactor.core.publisher.Mono;
 
 import java.util.stream.Collectors;
 
@@ -27,7 +28,12 @@ public abstract class TaskMapperDelegate implements TaskMapper {
         task.setAssignee(service.findById(request.getAssigneeId()).block());
         task.setName(request.getName());
         task.setStatus(request.getStatus());
-
+//        Mono.zip(Mono.just(task), service.findById(request.getAuthorId()), service.findById(request.getAssigneeId())).flatMap(data -> {
+//                data.getT1().setAuthor(data.getT2());
+//                data.getT1().setAssignee(data.getT3());
+//                    return null;
+//                }
+//        );
         return task;
     }
 
