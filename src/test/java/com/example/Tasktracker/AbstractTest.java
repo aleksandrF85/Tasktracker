@@ -19,7 +19,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -46,12 +45,15 @@ public class AbstractTest {
 
 
     @Container
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0.8")
+    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest")
             .withReuse(true);
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
+//        registry.add("spring.data.mongodb.host", () -> URI.create(mongoDBContainer.getReplicaSetUrl()).getHost());
+//        registry.add("spring.data.mongodb.port", () -> URI.create(mongoDBContainer.getReplicaSetUrl()).getPort());
         registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+
     }
 
     @Autowired
@@ -85,7 +87,7 @@ public class AbstractTest {
                                 .authorId(FIRST_USER_ID)
                                 .assigneeId(SECOND_USER_ID)
                                 .observerIds(Set.of(THIRD_USER_ID, FOURTH_USER_ID)).build(),
-                        Task.builder().id(FIRST_TASK_ID)
+                        Task.builder().id(SECOND_TASK_ID)
                                 .name("Second task")
                                 .description("Do second task")
                                 .createdAt(SECOND_TASK_CREATED)

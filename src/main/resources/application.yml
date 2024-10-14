@@ -1,4 +1,13 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://root:root@localhost:27017/appdatabase&authSource=admin
+      uri: mongodb://localhost:27017/appdatabase
+#      uri: mongodb://root:root@localhost:27017/appdatabase&authSource=admin
+#spring:
+#  data:
+#    mongodb:
+#      option:
+#        max-connection-idle-time: 60000
+#      host: localhost
+#      port: 27017
+#      database: appdatabase

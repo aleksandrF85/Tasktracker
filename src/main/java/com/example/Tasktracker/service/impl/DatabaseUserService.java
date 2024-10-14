@@ -34,11 +34,11 @@ public class DatabaseUserService implements UserService {
 
     @Override
     public Mono<User> update(String id, User user) {
-        var userForUpdate = findById(id).block();
 
-        BeanUtils.copyNonNullProperties(user, userForUpdate);
-
-        return userRepository.save(userForUpdate);
+        return Mono.zip(Mono.just(user), findById(id)).flatMap(data -> {
+            BeanUtils.copyNonNullProperties(data.getT1(), data.getT2());
+            return userRepository.save(data.getT2());
+        });
     }
 
     @Override

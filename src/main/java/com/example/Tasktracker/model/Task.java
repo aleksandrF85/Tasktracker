@@ -1,21 +1,22 @@
 package com.example.Tasktracker.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
+@Getter
+@Setter
+@ToString
 @Document(collection = "tasks")
 public class Task {
 
@@ -36,8 +37,9 @@ public class Task {
 
     String assigneeId;
 
+    @Builder.Default
     @Field("observers")
-    Set<String> observerIds;
+    Set<String> observerIds = new HashSet<>();
 
     /*Также у сущности должны быть поля, не попадающие в базу данных:*/
     @Transient
@@ -46,6 +48,7 @@ public class Task {
     @Transient
     User assignee;
 
+    @Builder.Default
     @Transient
-    Set<User> observers;
+    Set<User> observers = new HashSet<>();
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -29,6 +30,6 @@ public class TaskResponse {
 
     UserResponse assignee;
 
-    Set<UserResponse> observers;
+    Set<UserResponse> observers = new HashSet<>();
 
 }

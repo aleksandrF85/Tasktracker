@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,26 +31,31 @@ public class DatabaseTaskService implements TaskService {
 
     @Override
     public Mono<Task> save(Task task) {
+        if (task.getCreatedAt() == null) {
+            task.setCreatedAt(Instant.now());
+        }
         return taskRepository.save(task);
     }
 
     @Override
     public Mono<Task> update(String id, Task task) {
-        var taskForUpdate = findById(id).block();
 
-        BeanUtils.copyNonNullProperties(task, taskForUpdate);
-
-        return taskRepository.save(taskForUpdate);
+        return Mono.zip(Mono.just(task), findById(id)).flatMap(data -> {
+            BeanUtils.copyNonNullProperties(data.getT1(), data.getT2());
+            data.getT2().setUpdatedAt(Instant.now());
+            return taskRepository.save(data.getT2());
+        });
     }
 
     @Override
     public Mono<Task> setObserver(String taskId, String userId) {
-        Task taskForUpdate = findById(taskId).block();
-        Set<String> observers = new HashSet<>(taskForUpdate.getObserverIds());
-        observers.add(userId);
-        taskForUpdate.setObserverIds(observers);
 
-        return taskRepository.save(taskForUpdate);
+        return Mono.from(findById(taskId)).flatMap(data -> {
+            Set<String> observers = new HashSet<>(data.getObserverIds());
+            observers.add(userId);
+            data.setObserverIds(observers);
+            return taskRepository.save(data);
+        });
     }
 
     @Override
