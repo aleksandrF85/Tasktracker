@@ -10,6 +10,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,6 +49,11 @@ public class DatabaseTaskService implements TaskService {
     }
 
     @Override
+    public Mono<Void> deleteById(String id) {
+        return taskRepository.deleteById(id);
+    }
+
+    @Override
     public Mono<Task> setObserver(String taskId, String userId) {
 
         return Mono.from(findById(taskId)).flatMap(data -> {
@@ -59,7 +65,12 @@ public class DatabaseTaskService implements TaskService {
     }
 
     @Override
-    public Mono<Void> deleteById(String id) {
-        return taskRepository.deleteById(id);
+    public Mono<Task> deleteObservers(String taskId) {
+
+        return Mono.from(findById(taskId)).flatMap(data -> {
+            data.setObserverIds(Collections.emptySet());
+            return taskRepository.save(data);
+        });
     }
+
 }

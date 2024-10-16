@@ -39,7 +39,7 @@ public class UserController {
                 .map(ResponseEntity::ok);
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public Mono<ResponseEntity<UserResponse>> update(@PathVariable String id, @RequestBody @Valid UpsertUserRequest request) {
         return userService.update(id, userMapper.requestToUser(id, request))
                 .map(userMapper::userToResponse)

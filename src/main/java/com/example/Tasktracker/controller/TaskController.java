@@ -39,17 +39,9 @@ public class TaskController {
                 .map(ResponseEntity::ok);
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public Mono<ResponseEntity<TaskResponse>> update(@PathVariable String id, @RequestBody @Valid UpsertTaskRequest request) {
         return taskService.update(id, taskMapper.requestToTask(id, request))
-                .map(taskMapper::taskToResponse)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping("/observer/{id}")
-    public Mono<ResponseEntity<TaskResponse>> setObserver(@PathVariable String id, @RequestParam String userId) {
-        return taskService.setObserver(id, userId)
                 .map(taskMapper::taskToResponse)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
@@ -58,6 +50,22 @@ public class TaskController {
     @DeleteMapping("/{id}")
     public Mono<ResponseEntity<Void>> deleteById(@PathVariable String id) {
         return taskService.deleteById(id).then(Mono.just(ResponseEntity.noContent().build()));
+    }
+
+    @PutMapping("/observer/{taskId}/{userId}")
+    public Mono<ResponseEntity<TaskResponse>> setObserver(@PathVariable String taskId, @PathVariable String userId) {
+        return taskService.setObserver(taskId, userId)
+                .map(taskMapper::taskToResponse)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/observer/{taskId}")
+    public Mono<ResponseEntity<TaskResponse>> deleteObservers(@PathVariable String taskId) {
+        return taskService.deleteObservers(taskId)
+                .map(taskMapper::taskToResponse)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
 
