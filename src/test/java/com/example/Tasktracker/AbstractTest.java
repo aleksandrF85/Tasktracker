@@ -77,31 +77,31 @@ public class AbstractTest {
                 )
         ).collectList().block();
 
-        taskRepository.saveAll(
-                List.of(
-                        Task.builder().id(FIRST_TASK_ID)
-                                .name("First task")
-                                .description("Do first task")
-                                .createdAt(FIRST_TASK_CREATED)
-                                .status(TaskStatus.TODO)
-                                .authorId(FIRST_USER_ID)
-                                .assigneeId(SECOND_USER_ID)
-                                .observerIds(Set.of(THIRD_USER_ID, FOURTH_USER_ID)).build(),
-                        Task.builder().id(SECOND_TASK_ID)
-                                .name("Second task")
-                                .description("Do second task")
-                                .createdAt(SECOND_TASK_CREATED)
-                                .status(TaskStatus.TODO)
-                                .authorId(THIRD_USER_ID)
-                                .assigneeId(FOURTH_USER_ID)
-                                .observerIds(Set.of(FIRST_USER_ID, SECOND_USER_ID)).build()
-                )
-        ).collectList().block();
+//        taskRepository.saveAll(
+//                List.of(
+//                        Task.builder().id(FIRST_TASK_ID)
+//                                .name("First task")
+//                                .description("Do first task")
+//                                .createdAt(FIRST_TASK_CREATED)
+//                                .status(TaskStatus.TODO)
+//                                .authorId(FIRST_USER_ID)
+//                                .assigneeId(SECOND_USER_ID)
+//                                .observerIds(Set.of(THIRD_USER_ID, FOURTH_USER_ID)).build(),
+//                        Task.builder().id(SECOND_TASK_ID)
+//                                .name("Second task")
+//                                .description("Do second task")
+//                                .createdAt(SECOND_TASK_CREATED)
+//                                .status(TaskStatus.TODO)
+//                                .authorId(THIRD_USER_ID)
+//                                .assigneeId(FOURTH_USER_ID)
+//                                .observerIds(Set.of(FIRST_USER_ID, SECOND_USER_ID)).build()
+//                )
+//        ).collectList().block();
     }
 
     @AfterEach
     public void afterEach() {
-        taskRepository.deleteAll().block();
+//        taskRepository.deleteAll().block();
         userRepository.deleteAll().block();
     }
 }
