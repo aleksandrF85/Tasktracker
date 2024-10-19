@@ -6,7 +6,6 @@ import com.example.Tasktracker.model.Task;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
-import reactor.core.publisher.Mono;
 
 @DecoratedWith(TaskMapperDelegate.class)
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {UserMapper.class})

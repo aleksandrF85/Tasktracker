@@ -55,17 +55,19 @@ public class TaskController {
     @PutMapping("/observer/{taskId}/{userId}")
     public Mono<ResponseEntity<TaskResponse>> setObserver(@PathVariable String taskId, @PathVariable String userId) {
         return taskService.setObserver(taskId, userId)
-                .map(taskMapper::taskToResponse)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .then(taskService.findById(taskId)
+                        .map(taskMapper::taskToResponse)
+                        .map(ResponseEntity::ok)
+                        .defaultIfEmpty(ResponseEntity.notFound().build()));
     }
 
     @DeleteMapping("/observer/{taskId}")
     public Mono<ResponseEntity<TaskResponse>> deleteObservers(@PathVariable String taskId) {
         return taskService.deleteObservers(taskId)
-                .map(taskMapper::taskToResponse)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .then(taskService.findById(taskId)
+                        .map(taskMapper::taskToResponse)
+                        .map(ResponseEntity::ok)
+                        .defaultIfEmpty(ResponseEntity.notFound().build()));
     }
 
 

@@ -4,7 +4,10 @@ import com.example.Tasktracker.dto.request.UpsertUserRequest;
 import com.example.Tasktracker.dto.response.UserResponse;
 import com.example.Tasktracker.model.User;
 
-public abstract class UserMapperDelegate implements UserMapper{
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public abstract class UserMapperDelegate implements UserMapper {
 
     @Override
     public User requestToUser(UpsertUserRequest request) {
@@ -30,5 +33,11 @@ public abstract class UserMapperDelegate implements UserMapper{
         response.setEmail(user.getEmail());
 
         return response;
+    }
+
+    @Override
+    public Set<UserResponse> userSetToUserResponseSet(Set<User> userSet) {
+
+        return userSet.stream().map(this::userToResponse).collect(Collectors.toSet());
     }
 }

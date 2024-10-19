@@ -18,6 +18,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class DatabaseTaskService implements TaskService {
 
+    private final DatabaseUserService userService;
+
     private final TaskRepository taskRepository;
 
     @Override
@@ -27,7 +29,26 @@ public class DatabaseTaskService implements TaskService {
 
     @Override
     public Mono<Task> findById(String id) {
-        return taskRepository.findById(id);
+
+        Mono<Task> findTask = taskRepository.findById(id);
+
+        var observers = findTask.map(Task::getObserverIds)
+                .flatMapMany(Flux::fromIterable)
+                .flatMap(userService::findById)
+                .collectList().defaultIfEmpty(Collections.emptyList());
+
+        return findTask.zipWhen(task -> userService.findById(task.getAuthorId()), (t1, t2) -> {
+                    t1.setAuthor(t2);
+                    return t1;
+                })
+                .zipWhen(task -> userService.findById(task.getAssigneeId()), (t1, t2) -> {
+                    t1.setAssignee(t2);
+                    return t1;
+                })
+                .zipWhen(task -> observers, (t1, t2) -> {
+                    t1.setObservers(new HashSet<>(t2));
+                    return t1;
+                });
     }
 
     @Override
