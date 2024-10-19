@@ -62,8 +62,8 @@ public class AbstractTest {
     @Autowired
     protected UserRepository userRepository;
 
-    @Autowired
-    TaskRepository taskRepository;
+//    @Autowired
+//    TaskRepository taskRepository;
 
     @BeforeEach
     public void setUp() {
