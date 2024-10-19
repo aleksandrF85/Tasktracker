@@ -35,13 +35,13 @@ public class AbstractTest {
 
     protected static String FOURTH_USER_ID = UUID.randomUUID().toString();
 
-    protected static String FIRST_TASK_ID = UUID.randomUUID().toString();
-
-    protected static String SECOND_TASK_ID = UUID.randomUUID().toString();
-
-    protected static Instant FIRST_TASK_CREATED = Instant.now().minusMillis(1000);
-
-    protected static Instant SECOND_TASK_CREATED = Instant.now();
+//    protected static String FIRST_TASK_ID = UUID.randomUUID().toString();
+//
+//    protected static String SECOND_TASK_ID = UUID.randomUUID().toString();
+//
+//    protected static Instant FIRST_TASK_CREATED = Instant.now().minusMillis(1000);
+//
+//    protected static Instant SECOND_TASK_CREATED = Instant.now();
 
 
     @Container
