@@ -24,20 +24,24 @@ public class DatabaseTaskService implements TaskService {
 
     @Override
     public Flux<Task> findAll() {
-        return taskRepository.findAll();
+
+        return taskRepository.findAll().flatMap(task -> taskMapper(Mono.just(task)));
     }
 
     @Override
     public Mono<Task> findById(String id) {
 
-        Mono<Task> findTask = taskRepository.findById(id);
+        return taskMapper(taskRepository.findById(id));
+    }
 
-        var observers = findTask.map(Task::getObserverIds)
+    public Mono<Task> taskMapper (Mono<Task> taskMono){
+
+        var observers = taskMono.map(Task::getObserverIds)
                 .flatMapMany(Flux::fromIterable)
                 .flatMap(userService::findById)
                 .collectList().defaultIfEmpty(Collections.emptyList());
 
-        return findTask.zipWhen(task -> userService.findById(task.getAuthorId()), (t1, t2) -> {
+        return taskMono.zipWhen(task -> userService.findById(task.getAuthorId()), (t1, t2) -> {
                     t1.setAuthor(t2);
                     return t1;
                 })
@@ -56,7 +60,8 @@ public class DatabaseTaskService implements TaskService {
         if (task.getCreatedAt() == null) {
             task.setCreatedAt(Instant.now());
         }
-        return taskRepository.save(task);
+        var savedTask = taskRepository.save(task);
+        return taskMapper(savedTask);
     }
 
     @Override
