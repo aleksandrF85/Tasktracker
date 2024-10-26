@@ -1,6 +1,7 @@
 package com.example.Tasktracker.service.impl;
 
 import com.example.Tasktracker.model.Task;
+import com.example.Tasktracker.model.User;
 import com.example.Tasktracker.repository.TaskRepository;
 import com.example.Tasktracker.service.TaskService;
 import com.example.Tasktracker.utils.BeanUtils;
@@ -24,24 +25,21 @@ public class DatabaseTaskService implements TaskService {
 
     @Override
     public Flux<Task> findAll() {
-
-        return taskRepository.findAll().flatMap(task -> taskMapper(Mono.just(task)));
+        return taskRepository.findAll().map(Task::getId)
+                .flatMap(this::findById);
     }
 
     @Override
     public Mono<Task> findById(String id) {
 
-        return taskMapper(taskRepository.findById(id));
-    }
+        Mono<Task> findTask = taskRepository.findById(id);
 
-    public Mono<Task> taskMapper (Mono<Task> taskMono){
-
-        var observers = taskMono.map(Task::getObserverIds)
+        var observers = findTask.map(Task::getObserverIds)
                 .flatMapMany(Flux::fromIterable)
                 .flatMap(userService::findById)
                 .collectList().defaultIfEmpty(Collections.emptyList());
 
-        return taskMono.zipWhen(task -> userService.findById(task.getAuthorId()), (t1, t2) -> {
+        return findTask.zipWhen(task -> userService.findById(task.getAuthorId()), (t1, t2) -> {
                     t1.setAuthor(t2);
                     return t1;
                 })
@@ -49,7 +47,7 @@ public class DatabaseTaskService implements TaskService {
                     t1.setAssignee(t2);
                     return t1;
                 })
-                .zipWhen(task -> observers, (t1, t2) -> {
+                .zipWhen(task -> observers, (t1, t2) ->{
                     t1.setObservers(new HashSet<>(t2));
                     return t1;
                 });
@@ -60,8 +58,7 @@ public class DatabaseTaskService implements TaskService {
         if (task.getCreatedAt() == null) {
             task.setCreatedAt(Instant.now());
         }
-        var savedTask = taskRepository.save(task);
-        return taskMapper(savedTask);
+        return taskRepository.save(task);
     }
 
     @Override
