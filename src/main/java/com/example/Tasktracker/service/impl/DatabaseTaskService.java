@@ -1,7 +1,6 @@
 package com.example.Tasktracker.service.impl;
 
 import com.example.Tasktracker.model.Task;
-import com.example.Tasktracker.model.User;
 import com.example.Tasktracker.repository.TaskRepository;
 import com.example.Tasktracker.service.TaskService;
 import com.example.Tasktracker.utils.BeanUtils;
@@ -25,7 +24,8 @@ public class DatabaseTaskService implements TaskService {
 
     @Override
     public Flux<Task> findAll() {
-        return taskRepository.findAll().map(Task::getId)
+        return taskRepository.findAll()
+                .map(Task::getId)
                 .flatMap(this::findById);
     }
 
@@ -52,13 +52,13 @@ public class DatabaseTaskService implements TaskService {
                     return t1;
                 });
     }
-
     @Override
     public Mono<Task> save(Task task) {
         if (task.getCreatedAt() == null) {
             task.setCreatedAt(Instant.now());
         }
-        return taskRepository.save(task);
+        Mono<Task> newTask = taskRepository.save(task);
+        return newTask.flatMap(task1 -> findById(task1.getId()));
     }
 
     @Override
