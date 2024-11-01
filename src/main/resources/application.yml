@@ -1,13 +1,10 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/appdatabase
-#      uri: mongodb://root:root@localhost:27017/appdatabase&authSource=admin
-#spring:
-#  data:
-#    mongodb:
-#      option:
-#        max-connection-idle-time: 60000
-#      host: localhost
-#      port: 27017
-#      database: appdatabase
+      uri: mongodb://docker:mongopw@localhost:27017
+      host: localhost
+      port: 27017
+      username: docker
+      password: mongopw
+      authentication-database: admin
+      database: admin

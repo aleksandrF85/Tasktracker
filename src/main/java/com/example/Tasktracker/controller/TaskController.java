@@ -40,7 +40,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public Mono<ResponseEntity<TaskResponse>> update(@PathVariable String id, @RequestBody @Valid UpsertTaskRequest request) {
+    public Mono<ResponseEntity<TaskResponse>> update(@PathVariable String id, @RequestBody UpsertTaskRequest request) {
         return taskService.update(id, taskMapper.requestToTask(id, request))
                 .map(taskMapper::taskToResponse)
                 .map(ResponseEntity::ok)
