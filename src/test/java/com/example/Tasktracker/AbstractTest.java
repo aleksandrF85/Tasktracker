@@ -53,6 +53,12 @@ public class AbstractTest {
     @Container
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest")
             .withReuse(true);
+    @Autowired
+    protected WebTestClient webTestClient;
+    @Autowired
+    protected UserRepository userRepository;
+    @Autowired
+    protected TaskRepository taskRepository;
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
@@ -60,15 +66,6 @@ public class AbstractTest {
         registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
         registry.add("spring.data.mongodb.port", mongoDBContainer::getFirstMappedPort);
     }
-
-    @Autowired
-    protected WebTestClient webTestClient;
-
-    @Autowired
-    protected UserRepository userRepository;
-
-    @Autowired
-    protected TaskRepository taskRepository;
 
     @BeforeEach
     public void setUp() {

@@ -2,7 +2,6 @@ package com.example.Tasktracker.controller;
 
 import com.example.Tasktracker.AbstractTest;
 import com.example.Tasktracker.dto.request.UpsertTaskRequest;
-import com.example.Tasktracker.dto.request.UpsertUserRequest;
 import com.example.Tasktracker.dto.response.TaskResponse;
 import com.example.Tasktracker.dto.response.UserResponse;
 import com.example.Tasktracker.model.TaskStatus;
@@ -20,16 +19,16 @@ public class TaskControllerTest extends AbstractTest {
     @Test
     public void whenGetAllTasks_ThenReturnListOfTasksFromDatabase() {
         var expectedData = List.of(
-                new TaskResponse(FIRST_TASK_ID,"First task","Do first task", FIRST_TASK_CREATED, null, TaskStatus.TODO
-                        ,new UserResponse(FIRST_USER_ID, "Mr First", "firstmailbox@example.com")
-                        ,new UserResponse(SECOND_USER_ID, "Mr Second", "secondmailbox@example.com")
-                        ,(Set.of(new UserResponse(THIRD_USER_ID, "Mr Third", "thirdmailbox@example.com"),
-                                new UserResponse(FOURTH_USER_ID, "Mr Fourth", "fourthmailbox@example.com")))),
-                        new TaskResponse(SECOND_TASK_ID,"Second task","Do second task", SECOND_TASK_CREATED, null, TaskStatus.TODO
-                                ,new UserResponse(THIRD_USER_ID, "Mr Third", "thirdmailbox@example.com")
-                                ,new UserResponse(FOURTH_USER_ID, "Mr Fourth", "fourthmailbox@example.com")
-                                ,(Set.of(new UserResponse(FIRST_USER_ID, "Mr First", "firstmailbox@example.com"),
-                                new UserResponse(SECOND_USER_ID, "Mr Second", "secondmailbox@example.com"))))
+                new TaskResponse(FIRST_TASK_ID, "First task", "Do first task", FIRST_TASK_CREATED, null, TaskStatus.TODO
+                        , new UserResponse(FIRST_USER_ID, "Mr First", "firstmailbox@example.com")
+                        , new UserResponse(SECOND_USER_ID, "Mr Second", "secondmailbox@example.com")
+                        , (Set.of(new UserResponse(THIRD_USER_ID, "Mr Third", "thirdmailbox@example.com"),
+                        new UserResponse(FOURTH_USER_ID, "Mr Fourth", "fourthmailbox@example.com")))),
+                new TaskResponse(SECOND_TASK_ID, "Second task", "Do second task", SECOND_TASK_CREATED, null, TaskStatus.TODO
+                        , new UserResponse(THIRD_USER_ID, "Mr Third", "thirdmailbox@example.com")
+                        , new UserResponse(FOURTH_USER_ID, "Mr Fourth", "fourthmailbox@example.com")
+                        , (Set.of(new UserResponse(FIRST_USER_ID, "Mr First", "firstmailbox@example.com"),
+                        new UserResponse(SECOND_USER_ID, "Mr Second", "secondmailbox@example.com"))))
 
         );
 
@@ -44,10 +43,10 @@ public class TaskControllerTest extends AbstractTest {
 
     @Test
     public void whenGetTaskById_ThenReturnTaskFromDatabaseById() {
-        var expectedData = new TaskResponse(FIRST_TASK_ID,"First task","Do first task", FIRST_TASK_CREATED, null, TaskStatus.TODO
-                ,new UserResponse(FIRST_USER_ID, "Mr First", "firstmailbox@example.com")
-                ,new UserResponse(SECOND_USER_ID, "Mr Second", "secondmailbox@example.com")
-                ,(Set.of(new UserResponse(THIRD_USER_ID, "Mr Third", "thirdmailbox@example.com"),
+        var expectedData = new TaskResponse(FIRST_TASK_ID, "First task", "Do first task", FIRST_TASK_CREATED, null, TaskStatus.TODO
+                , new UserResponse(FIRST_USER_ID, "Mr First", "firstmailbox@example.com")
+                , new UserResponse(SECOND_USER_ID, "Mr Second", "secondmailbox@example.com")
+                , (Set.of(new UserResponse(THIRD_USER_ID, "Mr Third", "thirdmailbox@example.com"),
                 new UserResponse(FOURTH_USER_ID, "Mr Fourth", "fourthmailbox@example.com"))));
 
         webTestClient.get().uri("/api/task/{id}", FIRST_TASK_ID)
@@ -70,7 +69,6 @@ public class TaskControllerTest extends AbstractTest {
         request.setAuthorId(SECOND_USER_ID);
         request.setAssigneeId(FOURTH_USER_ID);
         request.setStatus(TaskStatus.TODO);
-
 
 
         webTestClient.post().uri("/api/task")

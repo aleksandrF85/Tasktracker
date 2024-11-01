@@ -47,11 +47,12 @@ public class DatabaseTaskService implements TaskService {
                     t1.setAssignee(t2);
                     return t1;
                 })
-                .zipWhen(task -> observers, (t1, t2) ->{
+                .zipWhen(task -> observers, (t1, t2) -> {
                     t1.setObservers(new HashSet<>(t2));
                     return t1;
                 });
     }
+
     @Override
     public Mono<Task> save(Task task) {
         if (task.getCreatedAt() == null) {

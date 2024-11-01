@@ -9,7 +9,8 @@ import reactor.test.StepVerifier;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 public class UserControllerTest extends AbstractTest {
@@ -31,6 +32,7 @@ public class UserControllerTest extends AbstractTest {
                 .contains(expectedData.toArray(UserResponse[]::new));
 
     }
+
     @Test
     public void whenGetUserById_ThenReturnUserFromDatabaseById() {
         var expectedData = new UserResponse(SECOND_USER_ID, "Mr Second", "secondmailbox@example.com");
