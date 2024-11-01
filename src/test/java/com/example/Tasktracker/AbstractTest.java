@@ -18,6 +18,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -35,13 +37,17 @@ public class AbstractTest {
 
     protected static String FOURTH_USER_ID = UUID.randomUUID().toString();
 
-//    protected static String FIRST_TASK_ID = UUID.randomUUID().toString();
-//
-//    protected static String SECOND_TASK_ID = UUID.randomUUID().toString();
-//
-//    protected static Instant FIRST_TASK_CREATED = Instant.now().minusMillis(1000);
-//
-//    protected static Instant SECOND_TASK_CREATED = Instant.now();
+    protected static String FIRST_TASK_ID = UUID.randomUUID().toString();
+
+    protected static String SECOND_TASK_ID = UUID.randomUUID().toString();
+
+    protected static ZonedDateTime zdt1 = ZonedDateTime.of(2024, 11, 1, 12, 40, 0, 0, ZoneId.of("Europe/Moscow"));
+
+    protected static ZonedDateTime zdt2 = ZonedDateTime.of(2024, 11, 1, 12, 40, 22, 0, ZoneId.of("Europe/Moscow"));
+
+    protected static Instant FIRST_TASK_CREATED = Instant.from(zdt1);
+
+    protected static Instant SECOND_TASK_CREATED = Instant.from(zdt2);
 
 
     @Container
@@ -50,10 +56,9 @@ public class AbstractTest {
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
-//        registry.add("spring.data.mongodb.host", () -> URI.create(mongoDBContainer.getReplicaSetUrl()).getHost());
-//        registry.add("spring.data.mongodb.port", () -> URI.create(mongoDBContainer.getReplicaSetUrl()).getPort());
-        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
-
+//        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+        registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
+        registry.add("spring.data.mongodb.port", mongoDBContainer::getFirstMappedPort);
     }
 
     @Autowired
@@ -62,8 +67,8 @@ public class AbstractTest {
     @Autowired
     protected UserRepository userRepository;
 
-//    @Autowired
-//    TaskRepository taskRepository;
+    @Autowired
+    protected TaskRepository taskRepository;
 
     @BeforeEach
     public void setUp() {
@@ -77,31 +82,31 @@ public class AbstractTest {
                 )
         ).collectList().block();
 
-//        taskRepository.saveAll(
-//                List.of(
-//                        Task.builder().id(FIRST_TASK_ID)
-//                                .name("First task")
-//                                .description("Do first task")
-//                                .createdAt(FIRST_TASK_CREATED)
-//                                .status(TaskStatus.TODO)
-//                                .authorId(FIRST_USER_ID)
-//                                .assigneeId(SECOND_USER_ID)
-//                                .observerIds(Set.of(THIRD_USER_ID, FOURTH_USER_ID)).build(),
-//                        Task.builder().id(SECOND_TASK_ID)
-//                                .name("Second task")
-//                                .description("Do second task")
-//                                .createdAt(SECOND_TASK_CREATED)
-//                                .status(TaskStatus.TODO)
-//                                .authorId(THIRD_USER_ID)
-//                                .assigneeId(FOURTH_USER_ID)
-//                                .observerIds(Set.of(FIRST_USER_ID, SECOND_USER_ID)).build()
-//                )
-//        ).collectList().block();
+        taskRepository.saveAll(
+                List.of(
+                        Task.builder().id(FIRST_TASK_ID)
+                                .name("First task")
+                                .description("Do first task")
+                                .createdAt(FIRST_TASK_CREATED)
+                                .status(TaskStatus.TODO)
+                                .authorId(FIRST_USER_ID)
+                                .assigneeId(SECOND_USER_ID)
+                                .observerIds(Set.of(THIRD_USER_ID, FOURTH_USER_ID)).build(),
+                        Task.builder().id(SECOND_TASK_ID)
+                                .name("Second task")
+                                .description("Do second task")
+                                .createdAt(SECOND_TASK_CREATED)
+                                .status(TaskStatus.TODO)
+                                .authorId(THIRD_USER_ID)
+                                .assigneeId(FOURTH_USER_ID)
+                                .observerIds(Set.of(FIRST_USER_ID, SECOND_USER_ID)).build()
+                )
+        ).collectList().block();
     }
 
     @AfterEach
     public void afterEach() {
-//        taskRepository.deleteAll().block();
+        taskRepository.deleteAll().block();
         userRepository.deleteAll().block();
     }
 }
